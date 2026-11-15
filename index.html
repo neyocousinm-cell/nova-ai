@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090f">
+  <meta name="description" content="NOVA AI — a purple, browser-powered AI assistant.">
+  <title>NOVA AI — Your AI, your space</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+    :root{color-scheme:dark;--bg:#09090f;--panel:#111119;--panel2:#171722;--panel3:#1d1b2a;--line:rgba(255,255,255,.085);--text:#f7f4ff;--muted:#9894a8;--purple:#a78bfa;--purple2:#7957ee;--blue:#82b8ff;--mint:#8ae8c1;--danger:#ff9eaa}
+    *{box-sizing:border-box}html,body{height:100%;margin:0}body{background:radial-gradient(900px 520px at 50% -260px,#3d277c55,transparent 70%),var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;overflow:hidden}button,textarea{font:inherit}button{cursor:pointer}
+    .app{height:100%;display:grid;grid-template-columns:258px minmax(0,1fr);max-width:1600px;margin:0 auto;position:relative}
+    .sidebar{background:rgba(12,12,19,.94);border-right:1px solid var(--line);padding:20px 15px;display:flex;flex-direction:column;min-width:0;z-index:3}
+    .brand{display:flex;align-items:center;gap:11px;padding:4px 8px 25px;font:700 22px 'Space Grotesk',sans-serif;letter-spacing:-1.1px}.brand-name em{font-style:normal;color:var(--purple)}
+    .mark{width:34px;height:34px;display:grid;place-items:center;position:relative;flex:none}.mark:before{content:'';position:absolute;width:24px;height:24px;border-radius:8px 8px 8px 3px;background:linear-gradient(145deg,#d7caff,#805cf2);transform:rotate(35deg);box-shadow:0 0 26px #8e6bfa66}.mark:after{content:'✦';position:relative;color:#191225;font-size:15px;font-weight:800}
+    .new-chat{height:44px;border:1px solid #a78bfa55;border-radius:12px;color:#eee8ff;background:linear-gradient(110deg,#9677fa25,#6d8fff12);display:flex;align-items:center;justify-content:flex-start;gap:11px;padding:0 13px;font-weight:700;font-size:13px;transition:.2s}.new-chat:hover{border-color:#b6a1ff;background:#9677fa33;transform:translateY(-1px)}.plus{font-size:20px;font-weight:400;color:#c7b8ff}
+    .side-label{margin:29px 8px 10px;font-size:10px;font-weight:700;letter-spacing:1.6px;color:#696579;text-transform:uppercase}.history-empty{font-size:12px;line-height:1.7;color:#777386;padding:10px 9px}.history-item{padding:10px 11px;margin:2px 0;border-radius:9px;color:#aaa6b8;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:#ffffff04}
+    .side-bottom{margin-top:auto}.model-card{border:1px solid var(--line);border-radius:13px;padding:12px;background:linear-gradient(145deg,#a78bfa0e,#ffffff03)}.model-card-top{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700}.tiny-orb{width:21px;height:21px;border-radius:50%;background:radial-gradient(circle at 34% 28%,#eee4ff,#a98cff 34%,#6247bd 75%);box-shadow:0 0 15px #9672ff55}.model-card p{margin:8px 0 0;color:#888497;font-size:10px;line-height:1.55}.side-foot{padding:15px 8px 0;color:#6d697c;font-size:10px;line-height:1.6}
+    .main{min-width:0;display:flex;flex-direction:column;height:100%;position:relative}.topbar{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 27px;border-bottom:1px solid var(--line);background:#0b0b12b8;backdrop-filter:blur(14px);flex:none}.top-title{font:600 14px 'Space Grotesk';color:#e9e5f5}.top-title span{font:400 12px 'DM Sans';color:#797588;margin-left:9px}.top-right{display:flex;align-items:center;gap:10px}.status-pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #ffffff12;background:#ffffff05;border-radius:99px;padding:7px 10px;color:#aaa6b7;font-size:10px}.status-dot{width:6px;height:6px;border-radius:50%;background:#e5b96e;box-shadow:0 0 10px #e5b96e77}.status-dot.ready{background:var(--mint);box-shadow:0 0 10px #8ae8c177}.icon-btn{width:34px;height:34px;border:1px solid var(--line);border-radius:10px;color:#b7b1c9;background:#ffffff05;display:grid;place-items:center}.icon-btn:hover{background:#ffffff0e;color:white}
+    .chat-scroll{flex:1;overflow-y:auto;scrollbar-color:#39324e transparent;scrollbar-width:thin}.chat-inner{width:min(850px,calc(100% - 56px));margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:38px 0 22px}.welcome{margin:auto 0 28px;text-align:center;padding-top:14px}.orb-wrap{width:88px;height:88px;position:relative;margin:0 auto 24px;display:grid;place-items:center}.orb{width:53px;height:53px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#f3eaff,#b39aff 30%,#694ed1 65%,#282047);box-shadow:0 0 35px #9672ff70,0 0 80px #7f5dec27;position:relative;z-index:1}.orb-wrap:before,.orb-wrap:after{content:'';position:absolute;inset:4px;border:1px solid #ac91ff55;border-radius:50%;transform:rotate(35deg) scaleY(.54)}.orb-wrap:after{inset:-2px;transform:rotate(-35deg) scaleY(.52);border-color:#82b8ff45}.eyebrow{font-size:10px;letter-spacing:2.8px;color:#b29bff;font-weight:700;text-transform:uppercase}.welcome h1{font:700 clamp(32px,5vw,48px)/1.08 'Space Grotesk';letter-spacing:-2.2px;margin:13px 0 10px}.welcome h1 span{background:linear-gradient(95deg,#d6c9ff,#a78bfa 48%,#79b7ff);background-clip:text;color:transparent}.welcome p{margin:0;color:#9692a5;font-size:13px;line-height:1.65}.load-row{margin:22px auto 0;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}.primary-btn{border:0;border-radius:11px;padding:12px 17px;background:linear-gradient(105deg,#a68aff,#7554e9);color:white;font-size:12px;font-weight:700;box-shadow:0 9px 28px #805ce93d;transition:.2s}.primary-btn:hover{transform:translateY(-1px);filter:brightness(1.08);box-shadow:0 13px 32px #805ce95c}.secondary-btn{border:1px solid #ffffff18;border-radius:11px;padding:11px 15px;background:#ffffff06;color:#c4bfd0;font-size:12px;font-weight:600}.secondary-btn:hover{background:#ffffff0d}.load-hint{width:100%;font-size:10px;color:#706c80;margin-top:2px}
+    .suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:min(620px,100%);margin:0 auto 28px}.suggestion{border:1px solid #ffffff12;border-radius:13px;background:linear-gradient(140deg,#ffffff07,#ffffff02);padding:13px 14px;text-align:left;color:#e9e5f4;display:flex;align-items:flex-start;gap:11px;min-height:65px;transition:.2s}.suggestion:hover{border-color:#a78bfa66;background:#a78bfa0e;transform:translateY(-2px)}.suggestion-icon{width:27px;height:27px;flex:none;border-radius:9px;background:#9677fa20;color:#c4b3ff;display:grid;place-items:center;font-size:13px}.suggestion:nth-child(2) .suggestion-icon{background:#5d9dff1c;color:#8fc0ff}.suggestion:nth-child(3) .suggestion-icon{background:#66dba51c;color:#87e3b4}.suggestion:nth-child(4) .suggestion-icon{background:#efa9691c;color:#efb980}.suggestion strong{display:block;font-size:11px;margin:1px 0 4px}.suggestion small{display:block;font-size:10px;line-height:1.4;color:#858194}
+    .messages{display:flex;flex-direction:column;gap:22px;margin-bottom:16px}.message{display:flex;gap:12px;align-items:flex-start;max-width:100%}.message.user{flex-direction:row-reverse}.bubble-avatar{width:30px;height:30px;border-radius:10px;flex:none;display:grid;place-items:center;font-size:12px;font-weight:800;background:linear-gradient(140deg,#a78bfa,#514099);color:white;box-shadow:0 5px 18px #7556d833}.message.assistant .bubble-avatar{background:radial-gradient(circle at 35% 28%,#f3eaff,#a98cff 38%,#634ac4 80%);color:#251b42}.bubble{max-width:min(720px,calc(100% - 45px));border:1px solid #ffffff10;border-radius:15px;padding:13px 15px;background:#15151f;color:#e9e6f2;font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}.message.user .bubble{background:linear-gradient(140deg,#2a2340,#211e32);border-color:#a78bfa2a}.message-actions{display:flex;gap:7px;margin-top:7px}.small-action{border:0;background:transparent;color:#777386;font-size:10px;padding:3px 4px}.small-action:hover{color:#c8baff}.typing{display:flex;gap:4px;padding:5px 0}.typing i{width:6px;height:6px;border-radius:50%;background:#b7a0ff;animation:pulse 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}@keyframes pulse{0%,70%,100%{opacity:.35;transform:translateY(0)}35%{opacity:1;transform:translateY(-3px)}}
+    .composer-wrap{flex:none;width:min(850px,calc(100% - 56px));margin:0 auto;padding:12px 0 17px;background:linear-gradient(180deg,transparent,#09090f 22%)}.composer{border:1px solid #a78bfa38;border-radius:17px;background:linear-gradient(145deg,#191824,#13131c);box-shadow:0 12px 45px #0005,0 0 35px #7650e510;padding:11px 12px 9px;transition:.2s}.composer:focus-within{border-color:#a78bfa8a;box-shadow:0 12px 45px #0005,0 0 35px #7650e522}.composer textarea{display:block;width:100%;resize:none;min-height:31px;max-height:150px;outline:0;border:0;background:transparent;color:#f4f0ff;padding:4px 5px;font-size:13px;line-height:1.5}.composer textarea::placeholder{color:#777386}.composer-bottom{display:flex;align-items:center;justify-content:space-between;padding:5px 1px 0}.composer-note{font-size:9px;color:#716d80}.send-btn{width:35px;height:35px;border:0;border-radius:10px;background:linear-gradient(140deg,#a58aff,#7655ed);color:white;font-size:18px;display:grid;place-items:center;box-shadow:0 5px 16px #805ce944}.send-btn:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}.disclaimer{text-align:center;color:#696579;font-size:9px;padding-top:9px;line-height:1.5}
+    .notice{position:fixed;left:50%;bottom:94px;transform:translate(-50%,10px);opacity:0;pointer-events:none;transition:.2s;background:#211e2d;border:1px solid #a78bfa42;color:#eee8ff;border-radius:10px;padding:10px 13px;font-size:11px;z-index:10;box-shadow:0 10px 30px #0008}.notice.show{opacity:1;transform:translate(-50%,0)}.error-text{color:var(--danger)!important}.progress-track{width:min(260px,100%);height:4px;border-radius:99px;background:#ffffff12;overflow:hidden;margin:8px auto 0}.progress-fill{height:100%;width:7%;background:linear-gradient(90deg,#a78bfa,#82b8ff);border-radius:99px;transition:width .25s}.hidden{display:none!important}
+    @media(max-width:780px){.app{grid-template-columns:1fr}.sidebar{position:absolute;inset:0 auto 0 0;width:260px;transform:translateX(-102%);transition:transform .25s;box-shadow:20px 0 50px #0008}.sidebar.open{transform:translateX(0)}.topbar{height:60px;padding:0 15px}.chat-inner,.composer-wrap{width:calc(100% - 30px)}.chat-inner{padding-top:24px}.welcome{padding-top:7px}.welcome h1{font-size:38px}.orb-wrap{margin-bottom:18px}.suggestions{gap:8px}.suggestion{padding:11px;min-height:60px}.suggestion small{font-size:9px}.status-pill{font-size:9px}.top-title span{display:none}}
+    @media(max-width:480px){.welcome h1{font-size:33px;letter-spacing:-1.5px}.welcome p{font-size:12px}.suggestions{grid-template-columns:1fr}.suggestion{min-height:53px}.chat-inner{width:calc(100% - 24px)}.composer-wrap{width:calc(100% - 24px)}.status-pill{padding:6px 8px}.topbar{padding:0 12px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><span class="mark"></span><span class="brand-name">nova<em>.ai</em></span></div>
+    <button class="new-chat" id="newChat"><span class="plus">＋</span> New chat</button>
+    <div class="side-label">Recent chat</div>
+    <div id="historyList"><div class="history-empty">Your recent conversations will appear here.</div></div>
+    <div class="side-bottom">
+      <div class="model-card">
+        <div class="model-card-top"><span class="tiny-orb"></span><span>NOVA Browser AI</span></div>
+        <p>Runs on your device. The model is downloaded from Hugging Face when you load it.</p>
+      </div>
+      <div class="side-foot">NOVA AI · Think bigger. Make more.<br>Made for curious minds.</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        <div class="top-title">NOVA AI <span>Personal assistant</span></div>
+      </div>
+      <div class="top-right">
+        <div class="status-pill"><span class="status-dot" id="statusDot"></span><span id="statusText">AI not loaded</span></div>
+        <button class="icon-btn" id="clearBtn" title="Clear conversation" aria-label="Clear conversation">⌫</button>
+      </div>
+    </header>
+
+    <section class="chat-scroll" id="chatScroll">
+      <div class="chat-inner">
+        <div class="welcome" id="welcome">
+          <div class="orb-wrap"><div class="orb"></div></div>
+          <div class="eyebrow">YOUR PERSONAL AI</div>
+          <h1>What can I help<br><span>you with today?</span></h1>
+          <p>Ask anything. Build something. Figure it out.</p>
+          <div class="load-row">
+            <button class="primary-btn" id="loadBtn">✦ &nbsp; Load NOVA AI</button>
+            <div class="load-hint" id="loadHint">First load downloads the AI model to this browser. It may take a few minutes.</div>
+            <div class="progress-track hidden" id="progressTrack"><div class="progress-fill" id="progressFill"></div></div>
+          </div>
+        </div>
+
+        <div class="suggestions" id="suggestions">
+          <button class="suggestion" data-prompt="Give me three original Roblox game ideas."><span class="suggestion-icon">✧</span><span><strong>Make something creative</strong><small>Get ideas for a game or project</small></span></button>
+          <button class="suggestion" data-prompt="Explain a difficult topic in simple steps."><span class="suggestion-icon">⌘</span><span><strong>Learn something new</strong><small>Break a big idea into steps</small></span></button>
+          <button class="suggestion" data-prompt="Help me plan a small project from start to finish."><span class="suggestion-icon">◈</span><span><strong>Plan a project</strong><small>Turn an idea into a clear plan</small></span></button>
+          <button class="suggestion" data-prompt="Write a simple Lua example and explain how it works."><span class="suggestion-icon">⟨/⟩</span><span><strong>Write some code</strong><small>Explore a small coding example</small></span></button>
+        </div>
+        <div class="messages" id="messages" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <div class="composer-wrap">
+      <div class="composer">
+        <textarea id="messageInput" rows="1" placeholder="Message NOVA..." aria-label="Message NOVA"></textarea>
+        <div class="composer-bottom"><span class="composer-note">Enter to send · Shift + Enter for a new line</span><button class="send-btn" id="sendBtn" aria-label="Send message" disabled>↑</button></div>
+      </div>
+      <div class="disclaimer">NOVA uses a small AI model that runs in your browser. It can make mistakes, so check important information.</div>
+    </div>
+  </main>
+</div>
+<div class="notice" id="notice"></div>
+
+<script type="module">
+  const MODEL_ID = 'onnx-community/LFM2.5-350M-ONNX';
+  const SYSTEM_PROMPT = 'You are NOVA, a helpful AI assistant. Be clear, accurate, and friendly. Explain things simply when useful. For coding questions, give safe beginner-friendly examples and explain where code belongs. If you do not know something, say so. Do not invent facts.';
+  const STORAGE_KEY = 'nova-ai-browser-chat-v1';
+  let generator = null;
+  let loadPromise = null;
+  let busy = false;
+  let messages = loadSavedMessages();
+  let recentTitle = '';
+
+  const $ = (id) => document.getElementById(id);
+  const input = $('messageInput');
+  const sendBtn = $('sendBtn');
+  const messagesEl = $('messages');
+  const chatScroll = $('chatScroll');
+
+  function loadSavedMessages(){
+    try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); return Array.isArray(saved) ? saved.slice(-40) : []; }
+    catch { return []; }
+  }
+  function saveMessages(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-40))); } catch(e) { console.warn('Could not save chat history:', e); }
+    updateHistory();
+  }
+  function updateHistory(){
+    const list = $('historyList');
+    if (!messages.length){ list.innerHTML = '<div class="history-empty">Your recent conversations will appear here.</div>'; return; }
+    const first = messages.find(m => m.role === 'user');
+    const title = first ? first.content.slice(0,42) : 'New conversation';
+    list.innerHTML = '';
+    const item = document.createElement('div'); item.className='history-item'; item.textContent = title; item.title = title; list.appendChild(item);
+  }
+  function showNotice(text){
+    const n=$('notice'); n.textContent=text; n.classList.add('show'); clearTimeout(showNotice.timer); showNotice.timer=setTimeout(()=>n.classList.remove('show'),2600);
+  }
+  function setStatus(text, ready=false){ $('statusText').textContent=text; $('statusDot').classList.toggle('ready',ready); }
+  function escapeText(s){ return String(s ?? ''); }
+  function addMessage(role, text, {persist=true}={}){
+    const wrap=document.createElement('div'); wrap.className=`message ${role}`;
+    const avatar=document.createElement('div'); avatar.className='bubble-avatar'; avatar.textContent=role==='user'?'Y':'✦';
+    const contentWrap=document.createElement('div'); contentWrap.style.minWidth='0';
+    const bubble=document.createElement('div'); bubble.className='bubble'; bubble.textContent=escapeText(text);
+    contentWrap.appendChild(bubble);
+    if(role==='assistant'){
+      const actions=document.createElement('div'); actions.className='message-actions';
+      const copy=document.createElement('button'); copy.className='small-action'; copy.textContent='Copy'; copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(text);showNotice('Copied to clipboard');}catch{showNotice('Clipboard access is unavailable in this browser.');}});
+      actions.appendChild(copy); contentWrap.appendChild(actions);
+    }
+    wrap.append(avatar,contentWrap); messagesEl.appendChild(wrap); chatScroll.scrollTop=chatScroll.scrollHeight;
+    if(persist){ messages.push({role,content:text}); saveMessages(); }
+    $('welcome').classList.add('hidden'); $('suggestions').classList.add('hidden');
+    return wrap;
+  }
+  function renderSaved(){
+    messagesEl.innerHTML='';
+    if(!messages.length){ $('welcome').classList.remove('hidden'); $('suggestions').classList.remove('hidden'); return; }
+    $('welcome').classList.add('hidden'); $('suggestions').classList.add('hidden');
+    messages.forEach(m=>addMessage(m.role,m.content,{persist:false}));
+  }
+  function addTyping(){
+    const wrap=document.createElement('div'); wrap.className='message assistant'; wrap.id='typingMessage';
+    const avatar=document.createElement('div'); avatar.className='bubble-avatar'; avatar.textContent='✦';
+    const bubble=document.createElement('div'); bubble.className='bubble'; bubble.innerHTML='<div class="typing"><i></i><i></i><i></i></div>';
+    wrap.append(avatar,bubble); messagesEl.appendChild(wrap); chatScroll.scrollTop=chatScroll.scrollHeight; return wrap;
+  }
+  async function loadModel(){
+    if(generator) return generator;
+    if(loadPromise) return loadPromise;
+    loadPromise=(async()=>{
+      $('loadBtn').disabled=true; $('loadBtn').textContent='Loading NOVA...'; $('loadHint').textContent='Connecting to the model and downloading its files. Keep this tab open.';
+      $('progressTrack').classList.remove('hidden'); $('progressFill').style.width='8%'; setStatus('Loading AI');
+      try{
+        const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.2');
+        let device='wasm';
+        try { if(navigator.gpu){ const adapter=await navigator.gpu.requestAdapter(); if(adapter) device='webgpu'; } } catch(e) { console.warn('WebGPU unavailable; using WASM.',e); }
+        $('loadHint').textContent=device==='webgpu'?'Preparing the AI model with your device GPU...':'WebGPU is unavailable. Trying the slower CPU mode...';
+        generator=await pipeline('text-generation', MODEL_ID, {
+          device,
+          dtype:'q4',
+          progress_callback:(p)=>{
+            if(p && typeof p.progress==='number'){
+              const pct=Math.max(8,Math.min(96,Math.round(p.progress)));
+              $('progressFill').style.width=pct+'%';
+            }
+            if(p && p.file) $('loadHint').textContent='Downloading model files: '+p.file;
+          }
+        });
+        $('progressFill').style.width='100%'; $('loadHint').textContent='NOVA is ready. Your messages are processed on this device.';
+        $('loadBtn').textContent='✓ NOVA is ready'; $('loadBtn').classList.remove('primary-btn'); $('loadBtn').classList.add('secondary-btn');
+        setStatus('AI ready',true); showNotice('NOVA is ready to chat');
+        return generator;
+      }catch(err){
+        generator=null; loadPromise=null; $('loadBtn').disabled=false; $('loadBtn').textContent='Try loading again'; $('progressTrack').classList.add('hidden');
+        $('loadHint').textContent='Could not load the model. Check your internet connection and use an up-to-date browser with WebGPU support.';
+        $('loadHint').classList.add('error-text'); setStatus('Load failed'); console.error(err); throw err;
+      }
+    })();
+    return loadPromise;
+  }
+  async function sendMessage(text){
+    const content=String(text||'').trim(); if(!content||busy) return;
+    busy=true; sendBtn.disabled=true; input.disabled=true;
+    addMessage('user',content);
+    const typing=addTyping();
+    try{
+      const pipe=await loadModel();
+      const recent=messages.slice(-9).map(m=>({role:m.role,content:m.content.slice(0,2200)}));
+      const prompt=[{role:'system',content:SYSTEM_PROMPT},...recent];
+      const output=await pipe(prompt,{max_new_tokens:280,do_sample:false,repetition_penalty:1.05});
+      const generated=output?.[0]?.generated_text;
+      let answer=Array.isArray(generated)?generated[generated.length-1]?.content:String(generated||'');
+      if(!answer || !String(answer).trim()) answer='I could not create a response. Please try again.';
+      typing.remove(); addMessage('assistant',String(answer).trim());
+    }catch(err){
+      typing.remove();
+      const text=err?.message?`I could not load or run the AI model. ${err.message}`:'I could not load or run the AI model. Please refresh and try again.';
+      addMessage('assistant',text);
+    }finally{
+      busy=false; input.disabled=false; sendBtn.disabled=!input.value.trim(); input.focus();
+    }
+  }
+  function resetChat(){
+    if(busy){showNotice('Wait for the current reply to finish first.');return;}
+    messages=[]; messagesEl.innerHTML=''; localStorage.removeItem(STORAGE_KEY); $('welcome').classList.remove('hidden'); $('suggestions').classList.remove('hidden'); updateHistory(); input.value=''; resizeInput(); showNotice('New chat started');
+  }
+  function resizeInput(){ input.style.height='auto'; input.style.height=Math.min(input.scrollHeight,150)+'px'; sendBtn.disabled=busy||!input.value.trim(); }
+
+  $('loadBtn').addEventListener('click',()=>loadModel().catch(()=>{}));
+  sendBtn.addEventListener('click',()=>{const v=input.value;input.value='';resizeInput();sendMessage(v);});
+  input.addEventListener('input',resizeInput);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(!sendBtn.disabled){const v=input.value;input.value='';resizeInput();sendMessage(v);}}});
+  $('newChat').addEventListener('click',resetChat); $('clearBtn').addEventListener('click',resetChat);
+  $('menuBtn').addEventListener('click',()=>$('sidebar').classList.toggle('open'));
+  document.querySelectorAll('.suggestion').forEach(btn=>btn.addEventListener('click',()=>sendMessage(btn.dataset.prompt)));
+  renderSaved(); updateHistory(); resizeInput();
+</script>
+</body>
+</html>
